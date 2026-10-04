@@ -1,0 +1,16 @@
+/* Masonry Columns */
+.masonry-columns{
+  column-count: 3;
+  column-gap: 1rem;
+}
+.masonry-item{ break-inside: avoid; margin-bottom: 1rem; }
+
+@media (max-width: 1024px){ .masonry-columns{ column-count:2 } }
+@media (max-width: 640px){ .masonry-columns{ column-count:1 } }
+
+/* small helpers */
+.rounded-xl-24{ border-radius:24px }
+.rounded-xl-36{ border-radius:36px }
+
+/* subtle focus */
+.btn-outline:focus, .btn-primary:focus{ outline: 2px solid rgba(232,165,152,0.18); outline-offset:2px }

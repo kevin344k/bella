@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">
+  <defs>
+    <linearGradient id="g2" x1="0" x2="1">
+      <stop offset="0" stop-color="#FFF1F3" />
+      <stop offset="1" stop-color="#E8A598" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#g2)" rx="24" />
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#5a2130" font-family="Georgia, serif" font-size="44">Rose Gold Nights — Exclusive Sets</text>
+</svg>

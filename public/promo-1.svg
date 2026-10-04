@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#FFD6E7" />
+      <stop offset="1" stop-color="#F8B6C8" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#g)" rx="24" />
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6b2133" font-family="Georgia, serif" font-size="44">Autumn Glow — New Campaign</text>
+</svg>

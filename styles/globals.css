@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './tokens.css';
+@import './extra.css';
+
+:root{
+  --primary: #F8B6C8;
+  --secondary: #FFD6E7;
+  --accent: #E8A598;
+  --bg: #FFF9FB;
+  --text: #242424;
+}
+
+html,body,#root{height:100%}
+
+body{
+  background: linear-gradient(180deg, rgba(255,245,247,1) 0%, rgba(255,250,251,1) 100%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* small design tokens */
+.bg-bg{background-color:var(--bg)}
+.text-text{color:var(--text)}
+
+/* glass card */
+.glass-card{
+  background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(248,182,200,0.03));
+  backdrop-filter: blur(10px) saturate(110%);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 8px 30px rgba(232,165,152,0.06);
+}
+
+/* buttons */
+.btn-primary{
+  background: linear-gradient(90deg,var(--primary),var(--secondary));
+  color: #242424;
+  font-weight:600;
+  box-shadow: 0 6px 20px rgba(232,165,152,0.12);
+}
+
+.btn-outline{
+  background: transparent;
+  border: 1px solid rgba(36,36,36,0.06);
+  color: var(--text);
+}
+
+/* Hero image mask + halo */
+.hero-image{
+  --mx: 50%;
+  --my: 50%;
+  --mr: 0px;
+  position: relative;
+  height:100%;
+  touch-action: none; /* capture touch interactions for smooth dragging */
+}
+
+.hero-image img{transition: transform 450ms cubic-bezier(.2,.9,.2,1)}
+
+.makeup-layer{
+  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.35), rgba(255,255,255,0.25) calc(var(--mr) * 0.85), rgba(255,255,255,0) calc(var(--mr) * 1.2));
+  mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.35), rgba(255,255,255,0.25) calc(var(--mr) * 0.85), rgba(255,255,255,0) calc(var(--mr) * 1.2));
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  filter: drop-shadow(0 8px 40px rgba(232,165,152,0.06));
+}
+
+.cursor-halo{
+  position:absolute;
+  left:var(--mx);
+  top:var(--my);
+  width:220px;
+  height:220px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(248,182,200,0.18) 0%, rgba(232,165,152,0.06) 35%, transparent 60%);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+  opacity:0;
+  transition: opacity 200ms ease;
+}
+
+.hero-image.pointer-active .cursor-halo{opacity:1}
+
+/* Floating particles */
+.particle{
+  position:absolute; border-radius:50%; opacity:0.7; filter: blur(8px); transform: translate3d(0,0,0);
+}
+.particle-1{width:120px;height:120px;right:18%;top:14%;background:linear-gradient(90deg,var(--secondary),rgba(232,165,152,0.15));}
+.particle-2{width:64px;height:64px;left:10%;top:60%;background:linear-gradient(90deg,var(--primary),rgba(232,165,152,0.08));}
+.particle-3{width:96px;height:96px;right:6%;bottom:12%;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,0.02));}
+
+/* responsive tweaks */
+@media (max-width: 767px){
+  .hero-image{width:100%}
+  .cursor-halo{width:120px;height:120px}
+  .text-6xl{font-size:3rem}
+
+  /* Softer, smaller mask for touch precision */
+  .makeup-layer{
+    -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.55), rgba(255,255,255,0.3) calc(var(--mr) * 0.95), rgba(255,255,255,0) calc(var(--mr) * 1.3));
+    mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.55), rgba(255,255,255,0.3) calc(var(--mr) * 0.95), rgba(255,255,255,0) calc(var(--mr) * 1.3));
+  }
+
+  .cursor-halo{ filter: blur(14px); }
+}

@@ -1,0 +1,20 @@
+:root{
+  --brand-primary: #F8B6C8;
+  --brand-secondary: #FFD6E7;
+  --brand-accent: #E8A598;
+  --bg: #FFF9FB;
+  --text: #242424;
+  --radius-lg: 24px;
+  --radius-xl: 36px;
+}
+
+/* useful token classes for components */
+.token-glass{
+  background: linear-gradient(135deg, rgba(255,255,255,0.65), rgba(248,182,200,0.03));
+  backdrop-filter: blur(12px) saturate(110%);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+.token-shadow{
+  box-shadow: 0 12px 40px rgba(232,165,152,0.06);
+}

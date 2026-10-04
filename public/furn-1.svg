@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#FFF9FB" rx="24" />
+  <rect x="120" y="200" width="560" height="240" rx="12" fill="#FFEFF3" />
+  <text x="400" y="360" text-anchor="middle" fill="#6b2133" font-size="28">Modern Shelf</text>
+</svg>
