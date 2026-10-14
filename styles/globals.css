@@ -47,62 +47,84 @@ body{
   color: var(--text);
 }
 
-/* Hero image mask + halo */
-.hero-image{
-  --mx: 50%;
-  --my: 50%;
-  --mr: 0px;
-  position: relative;
-  height:100%;
-  touch-action: none; /* capture touch interactions for smooth dragging */
+/* Interactive face reveal */
+.pb-hero {
+  background: #fff7f5;
 }
 
-.hero-image img{transition: transform 450ms cubic-bezier(.2,.9,.2,1)}
+.hero-image {
+  --mx: 25%;
+  --my: 50%;
+  --mr: 140px;
+  touch-action: none;
+}
 
-.makeup-layer{
-  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.35), rgba(255,255,255,0.25) calc(var(--mr) * 0.85), rgba(255,255,255,0) calc(var(--mr) * 1.2));
-  mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.35), rgba(255,255,255,0.25) calc(var(--mr) * 0.85), rgba(255,255,255,0) calc(var(--mr) * 1.2));
+.hero-image img {
+  pointer-events: none;
+}
+
+.makeup-reveal-interactive {
+  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), #fff 0, rgba(255,255,255,0.98) calc(var(--mr) * 0.45), rgba(255,255,255,0.3) calc(var(--mr) * 0.85), transparent calc(var(--mr) * 1.15));
+  mask-image: radial-gradient(circle at var(--mx) var(--my), #fff 0, rgba(255,255,255,0.98) calc(var(--mr) * 0.45), rgba(255,255,255,0.3) calc(var(--mr) * 0.85), transparent calc(var(--mr) * 1.15));
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  filter: drop-shadow(0 8px 40px rgba(232,165,152,0.06));
+  opacity: 0;
+  transition: opacity 180ms ease;
 }
 
-.cursor-halo{
-  position:absolute;
-  left:var(--mx);
-  top:var(--my);
-  width:220px;
-  height:220px;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background: radial-gradient(circle, rgba(248,182,200,0.18) 0%, rgba(232,165,152,0.06) 35%, transparent 60%);
-  filter: blur(18px);
-  mix-blend-mode: screen;
-  opacity:0;
-  transition: opacity 200ms ease;
+.hero-image.pointer-active-left .makeup-reveal-interactive {
+  opacity: 1;
 }
 
-.hero-image.pointer-active .cursor-halo{opacity:1}
-
-/* Floating particles */
-.particle{
-  position:absolute; border-radius:50%; opacity:0.7; filter: blur(8px); transform: translate3d(0,0,0);
+.cursor-halo {
+  position: absolute;
+  top: var(--my);
+  left: var(--mx);
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(248,182,200,0.3) 0%, rgba(232,165,152,0.08) 50%, transparent 70%);
+  filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
 }
-.particle-1{width:120px;height:120px;right:18%;top:14%;background:linear-gradient(90deg,var(--secondary),rgba(232,165,152,0.15));}
-.particle-2{width:64px;height:64px;left:10%;top:60%;background:linear-gradient(90deg,var(--primary),rgba(232,165,152,0.08));}
-.particle-3{width:96px;height:96px;right:6%;bottom:12%;background:linear-gradient(90deg,var(--accent),rgba(255,255,255,0.02));}
 
-/* responsive tweaks */
-@media (max-width: 767px){
-  .hero-image{width:100%}
-  .cursor-halo{width:120px;height:120px}
-  .text-6xl{font-size:3rem}
+.hero-image.pointer-active-left .cursor-halo {
+  opacity: 1;
+}
 
-  /* Softer, smaller mask for touch precision */
-  .makeup-layer{
-    -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.55), rgba(255,255,255,0.3) calc(var(--mr) * 0.95), rgba(255,255,255,0) calc(var(--mr) * 1.3));
-    mask-image: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) calc(var(--mr) * 0.55), rgba(255,255,255,0.3) calc(var(--mr) * 0.95), rgba(255,255,255,0) calc(var(--mr) * 1.3));
+.pdf-viewer .react-pdf__Page {
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: .5rem;
+  background: white;
+  box-shadow: 0 8px 32px rgba(41, 37, 36, .14);
+}
+
+.pdf-viewer .react-pdf__Page canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+@media (max-width: 767px) {
+  .hero-image {
+    --mr: 110px;
   }
 
-  .cursor-halo{ filter: blur(14px); }
+  .cursor-halo {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-halo,
+  .makeup-reveal-interactive {
+    transition: none;
+  }
 }

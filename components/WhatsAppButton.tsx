@@ -3,7 +3,7 @@
 import React from 'react'
 import { useContextStore } from '../store/useContextStore'
 
-const PHONE = '<YOUR_PHONE_WITH_COUNTRY_CODE>' // e.g. 521234567890
+const PHONE = '593999312678'
 
 function buildMessage(brand?: string, product?: string, catalog?: string) {
   const lines = [

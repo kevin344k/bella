@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 type Props = {
@@ -11,153 +11,147 @@ type Props = {
 
 export default function HeroReveal({ imgNatural, imgMakeup, alt = 'Modelo Ponte Bella' }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const posRef = useRef({ x: 50, y: 50, r: 0 })
-  const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
-    let clientRect: DOMRect | null = null
 
-    function writeVars() {
-      const { x, y, r } = posRef.current
-      container.style.setProperty('--mx', `${x}%`)
-      container.style.setProperty('--my', `${y}%`)
-      container.style.setProperty('--mr', `${r}px`)
-      rafRef.current = requestAnimationFrame(writeVars)
-    }
+    function handlePointer(clientX: number, clientY: number) {
+      const rect = container!.getBoundingClientRect()
+      const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))
+      const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))
 
-    rafRef.current = requestAnimationFrame(writeVars)
+      container!.style.setProperty('--mx', `${x}%`)
+      container!.style.setProperty('--my', `${y}%`)
 
-    function onMove(e: PointerEvent | TouchEvent) {
-      if (!clientRect) clientRect = container!.getBoundingClientRect()
-      let clientX = 0
-      let clientY = 0
-      if ((e as TouchEvent).touches) {
-        const t = (e as TouchEvent).touches[0]
-        clientX = t.clientX
-        clientY = t.clientY
+      // El efecto reveal con cursor se aplica exclusivamente en la mitad que no lleva maquillaje (x <= 50%)
+      if (x <= 50) {
+        container!.classList.add('pointer-active-left')
       } else {
-        const p = e as PointerEvent
-        clientX = p.clientX
-        clientY = p.clientY
+        container!.classList.remove('pointer-active-left')
       }
-      const px = ((clientX - clientRect.left) / clientRect.width) * 100
-      const py = ((clientY - clientRect.top) / clientRect.height) * 100
-      posRef.current.x = Math.max(0, Math.min(100, px))
-      posRef.current.y = Math.max(0, Math.min(100, py))
-      posRef.current.r = window.innerWidth < 768 ? 120 : 180
-      container.classList.add('pointer-active')
     }
 
-    function onLeave() {
-      container.classList.remove('pointer-active')
-      posRef.current.r = 0
+    function onPointerMove(e: MouseEvent | PointerEvent) {
+      handlePointer(e.clientX, e.clientY)
     }
 
-    container.addEventListener('pointermove', onMove as any)
-    container.addEventListener('pointerdown', onMove as any)
-    container.addEventListener('pointerleave', onLeave as any)
-    container.addEventListener('touchstart', onMove as any, { passive: true })
-    container.addEventListener('touchmove', onMove as any, { passive: true })
-    container.addEventListener('touchend', onLeave as any)
+    function onTouchMove(e: TouchEvent) {
+      if (e.touches.length > 0) {
+        handlePointer(e.touches[0].clientX, e.touches[0].clientY)
+      }
+    }
+
+    function resetReveal() {
+      container!.classList.remove('pointer-active-left')
+    }
+
+    container.addEventListener('pointermove', onPointerMove)
+    container.addEventListener('pointerdown', onPointerMove)
+    container.addEventListener('mousemove', onPointerMove)
+    container.addEventListener('pointerleave', resetReveal)
+    container.addEventListener('mouseleave', resetReveal)
+    container.addEventListener('touchmove', onTouchMove, { passive: true })
+    container.addEventListener('touchstart', onTouchMove, { passive: true })
+    container.addEventListener('touchend', resetReveal)
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
-      container.removeEventListener('pointermove', onMove as any)
-      container.removeEventListener('pointerdown', onMove as any)
-      container.removeEventListener('pointerleave', onLeave as any)
-      container.removeEventListener('touchstart', onMove as any)
-      container.removeEventListener('touchmove', onMove as any)
-      container.removeEventListener('touchend', onLeave as any)
+      container.removeEventListener('pointermove', onPointerMove)
+      container.removeEventListener('pointerdown', onPointerMove)
+      container.removeEventListener('mousemove', onPointerMove)
+      container.removeEventListener('pointerleave', resetReveal)
+      container.removeEventListener('mouseleave', resetReveal)
+      container.removeEventListener('touchmove', onTouchMove)
+      container.removeEventListener('touchstart', onTouchMove)
+      container.removeEventListener('touchend', resetReveal)
     }
   }, [])
 
-  const [debugVisible, setDebugVisible] = React.useState(false)
-  const [makeupOpacity, setMakeupOpacity] = React.useState(1)
-  const [showMakeupFull, setShowMakeupFull] = React.useState(false)
-  const [offsetX, setOffsetX] = React.useState(0)
-  const [offsetY, setOffsetY] = React.useState(0)
-  const [makeupScale, setMakeupScale] = React.useState(1)
-
   return (
-    <section className="relative w-full h-screen overflow-hidden">
-      <div className="absolute inset-0 flex items-center justify-start px-6 md:px-24 z-10">
+    <section id="inicio" className="pb-hero relative w-full overflow-hidden bg-[#fff7f5] scroll-mt-24">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14 items-center">
+        {/* Columna de presentación */}
         <div className="max-w-xl">
-          <motion.h1
-            className="text-6xl font-serif tracking-widest text-text leading-tight"
-            initial={{ opacity: 0, y: 16 }}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.65 }}
           >
-            PONTE BELLA
-          </motion.h1>
-          <motion.p className="mt-4 text-lg text-muted-foreground/90" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-            Discover the most beautiful version of yourself.
-          </motion.p>
-          <div className="mt-8 flex gap-4">
-            <button className="btn-primary px-6 py-3 rounded-xl-24">View Catalogs</button>
-            <button className="btn-outline px-6 py-3 rounded-xl-24">Explore Products</button>
-          </div>
-        </div>
-      </div>
-
-      <div ref={containerRef} className="hero-image absolute right-0 top-0 w-full md:w-1/2 h-full overflow-hidden">
-        <img src={imgNatural} alt={alt} className="absolute inset-0 w-full h-full object-cover" draggable={false} />
-        <img
-          src={imgMakeup}
-          alt={alt}
-          className="absolute inset-0 w-full h-full object-cover makeup-layer"
-          draggable={false}
-          style={{
-            opacity: makeupOpacity,
-            WebkitMaskImage: showMakeupFull ? 'none' : undefined,
-            maskImage: showMakeupFull ? 'none' : undefined,
-            transform: `translate(${offsetX}px, ${offsetY}px) scale(${makeupScale})`
-          }}
-        />
-        <div className="cursor-halo pointer-events-none" aria-hidden />
-      </div>
-
-      {/* Debug / align helper */}
-      <div className="fixed right-6 top-6 z-50">
-        <div className="bg-white/80 backdrop-blur-md rounded-xl p-3 shadow-md text-sm">
-          <div className="flex items-center gap-2">
-            <label className="font-semibold">Align Helper</label>
-            <button className="ml-2 text-xs text-gray-600" onClick={() => setDebugVisible((s) => !s)}>{debugVisible ? 'Hide' : 'Show'}</button>
-          </div>
-          {debugVisible && (
-            <div className="mt-2 w-72">
-              <div className="mb-2">Makeup Opacity</div>
-              <input type="range" min={0} max={1} step={0.01} value={makeupOpacity} onChange={(e) => setMakeupOpacity(Number(e.target.value))} className="w-full" />
-
-              <div className="mt-3 mb-2">Offset X (px)</div>
-              <input type="range" min={-80} max={80} step={1} value={offsetX} onChange={(e) => setOffsetX(Number(e.target.value))} className="w-full" />
-              <input type="number" value={offsetX} onChange={(e) => setOffsetX(Number(e.target.value))} className="w-full mt-1 p-1 rounded border text-sm" />
-
-              <div className="mt-3 mb-2">Offset Y (px)</div>
-              <input type="range" min={-80} max={80} step={1} value={offsetY} onChange={(e) => setOffsetY(Number(e.target.value))} className="w-full" />
-              <input type="number" value={offsetY} onChange={(e) => setOffsetY(Number(e.target.value))} className="w-full mt-1 p-1 rounded border text-sm" />
-
-              <div className="mt-3 mb-2">Scale</div>
-              <input type="range" min={0.95} max={1.05} step={0.001} value={makeupScale} onChange={(e) => setMakeupScale(Number(e.target.value))} className="w-full" />
-              <input type="number" value={makeupScale} onChange={(e) => setMakeupScale(Number(e.target.value))} className="w-full mt-1 p-1 rounded border text-sm" />
-
-              <div className="mt-2 flex items-center gap-2">
-                <input id="showFull" type="checkbox" checked={showMakeupFull} onChange={(e) => setShowMakeupFull(e.target.checked)} />
-                <label htmlFor="showFull">Show full makeup (disable mask)</label>
-              </div>
-              <div className="mt-2 text-xs text-gray-600">Use the sliders and numeric inputs to fine-tune alignment. Toggle full makeup to overlay the makeup image without the mask.</div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-rose-200/70 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-rose-700 shadow-sm backdrop-blur">
+              Tu belleza, a tu manera
+            </span>
+            <h1 className="mt-6 font-serif text-5xl leading-[1.06] tracking-wide text-stone-900 sm:text-6xl lg:text-7xl">
+              Descubre tu
+              <span className="block italic text-rose-700">mejor versión.</span>
+            </h1>
+            <p className="mt-5 max-w-lg text-base leading-7 text-stone-600 sm:text-lg">
+              Explora maquillaje, cuidado y fragancias de tus marcas favoritas. Pasa el cursor por el rostro para ver la transformación.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <a
+                href="#catalogos"
+                className="btn-primary inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-semibold transition-transform hover:-translate-y-0.5"
+              >
+                Ver catálogos
+              </a>
+              <a
+                href="#marcas"
+                className="btn-outline inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-semibold transition-colors hover:bg-white"
+              >
+                Nuestras marcas
+              </a>
             </div>
-          )}
+          </motion.div>
         </div>
-      </div>
 
-      {/* floating particles (pure CSS) */}
-      <div className="pointer-events-none">
-        <div className="particle particle-1" />
-        <div className="particle particle-2" />
-        <div className="particle particle-3" />
+        {/* Columna interactiva: división a la mitad + reveal interactivo en el lado sin maquillaje */}
+        <div className="w-full flex justify-center">
+          <div
+            ref={containerRef}
+            className="hero-image relative w-full max-w-[460px] md:max-w-[500px] aspect-[2/3] rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(244,180,195,0.35)] border border-rose-100 select-none bg-stone-100"
+            role="region"
+            aria-label="Demostración interactiva de belleza dividida a la mitad"
+          >
+            {/* 1. Capa base: rostro al natural completo */}
+            <img
+              src={imgNatural}
+              alt={alt}
+              className="absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+              draggable={false}
+            />
+
+            {/* 2. Capa fija con maquillaje: mitad derecha (50% a 100%) */}
+            <img
+              src={imgMakeup}
+              alt={alt}
+              className="absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+              style={{ clipPath: 'polygon(50% 0, 100% 0, 100% 100%, 50% 100%)' }}
+              draggable={false}
+            />
+
+            {/* 3. Capa interactiva: revela maquillaje en la mitad sin maquillaje (0% a 50%) con el cursor */}
+            <img
+              src={imgMakeup}
+              alt={alt}
+              className="makeup-reveal-interactive absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+              style={{ clipPath: 'polygon(0 0, 50% 0, 50% 100%, 0 100%)' }}
+              draggable={false}
+            />
+
+            {/* Línea divisoria central sutil y elegante a la mitad */}
+            <div
+              className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-white/80 shadow-[0_0_8px_rgba(255,255,255,0.9)] pointer-events-none z-10"
+              aria-hidden="true"
+            >
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white/95 shadow-md border border-rose-200/70 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-rose-400" />
+              </div>
+            </div>
+
+            {/* Halo de luz suave centrado en el cursor sobre el lado sin maquillaje */}
+            <div className="cursor-halo pointer-events-none" aria-hidden="true" />
+          </div>
+        </div>
       </div>
     </section>
   )
