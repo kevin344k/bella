@@ -4,13 +4,14 @@ import React, { useRef } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import ProductCard from './ProductCard'
+import ProductSkeleton from './ProductSkeleton'
 import { useProducts } from './useProducts'
 
 export default function OfertasCarousel() {
-  const { products } = useProducts()
+  const { products, loading } = useProducts()
   const ref = useRef<HTMLDivElement>(null)
   const ofertas = products.filter((p) => p.onSale)
-  if (!ofertas.length) return null
+  if (!loading && !ofertas.length) return null
 
   const scroll = (dir: number) => ref.current?.scrollBy({ left: dir * ref.current.clientWidth * 0.8, behavior: 'smooth' })
 
@@ -27,6 +28,9 @@ export default function OfertasCarousel() {
         </div>
       </div>
       <div ref={ref} className="flex gap-3 sm:gap-5 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {loading && Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="shrink-0 w-[62%] sm:w-[38%] md:w-[30%] lg:w-[23%]"><ProductSkeleton /></div>
+        ))}
         {ofertas.map((p) => (
           <div key={p.id} className="snap-start shrink-0 w-[62%] sm:w-[38%] md:w-[30%] lg:w-[23%]">
             <ProductCard p={p} />

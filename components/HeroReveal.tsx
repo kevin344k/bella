@@ -32,14 +32,9 @@ export default function HeroReveal({ imgNatural, imgMakeup, alt = 'Modelo Ponte 
       }
     }
 
-    function onPointerMove(e: MouseEvent | PointerEvent) {
-      handlePointer(e.clientX, e.clientY)
-    }
-
-    function onTouchMove(e: TouchEvent) {
-      if (e.touches.length > 0) {
-        handlePointer(e.touches[0].clientX, e.touches[0].clientY)
-      }
+    // Solo con ratón: en pantallas táctiles se muestra la imagen dividida y la página hace scroll normal.
+    function onPointerMove(e: PointerEvent) {
+      if (e.pointerType === 'mouse') handlePointer(e.clientX, e.clientY)
     }
 
     function resetReveal() {
@@ -47,23 +42,11 @@ export default function HeroReveal({ imgNatural, imgMakeup, alt = 'Modelo Ponte 
     }
 
     container.addEventListener('pointermove', onPointerMove)
-    container.addEventListener('pointerdown', onPointerMove)
-    container.addEventListener('mousemove', onPointerMove)
     container.addEventListener('pointerleave', resetReveal)
-    container.addEventListener('mouseleave', resetReveal)
-    container.addEventListener('touchmove', onTouchMove, { passive: true })
-    container.addEventListener('touchstart', onTouchMove, { passive: true })
-    container.addEventListener('touchend', resetReveal)
 
     return () => {
       container.removeEventListener('pointermove', onPointerMove)
-      container.removeEventListener('pointerdown', onPointerMove)
-      container.removeEventListener('mousemove', onPointerMove)
       container.removeEventListener('pointerleave', resetReveal)
-      container.removeEventListener('mouseleave', resetReveal)
-      container.removeEventListener('touchmove', onTouchMove)
-      container.removeEventListener('touchstart', onTouchMove)
-      container.removeEventListener('touchend', resetReveal)
     }
   }, [])
 

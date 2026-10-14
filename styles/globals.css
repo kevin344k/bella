@@ -56,7 +56,6 @@ body{
   --mx: 25%;
   --my: 50%;
   --mr: 140px;
-  touch-action: none;
 }
 
 .hero-image img {
