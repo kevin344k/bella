@@ -3,6 +3,7 @@ import BrandCarousel from '../components/BrandCarousel'
 import PDFViewer from '../components/PDFViewer'
 import OfertasCarousel from '../components/OfertasCarousel'
 import CategoriasSection from '../components/CategoriasSection'
+import Testimonials from '../components/Testimonials'
 import AutoSliders from '../components/AutoSliders'
 import WhatsAppButton from '../components/WhatsAppButton'
 import WhatsAppDemoSetter from '../components/WhatsAppDemoSetter'
@@ -47,7 +48,10 @@ export default function Home() {
 
       {/* Marcas principales */}
       <section id="marcas" className="max-w-7xl mx-auto scroll-mt-8 py-14 px-6">
-        <h2 className="text-3xl font-semibold mb-6">Nuestras marcas</h2>
+        <div>
+          <p className="text-xs tracking-[0.3em] uppercase text-rose-600 font-semibold">Las mejores</p>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-stone-900">Marcas</h2>
+        </div>
         <div><BrandCarousel /></div>
       </section>
 
@@ -71,16 +75,14 @@ export default function Home() {
         <PDFViewer catalogs={catalogs} />
       </section>
 
-      {/* Promociones y testimonios complementarios */}
-      <section className="max-w-7xl mx-auto py-16 px-6">
-        <AutoSliders />
-      </section>
+      {/*  testimonios complementarios */}
+    
 
-      <section className="max-w-7xl mx-auto py-6 px-6">
-        <WhatsAppDemoSetter />
-      </section>
+      <Testimonials />
 
-      <WhatsAppButton />
+    
+
+     
     </main>
   )
 }

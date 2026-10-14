@@ -2,6 +2,7 @@ import './globals.css'
 import type { PropsWithChildren } from 'react'
 import ServiceWorkerRegister from '../components/ServiceWorkerRegister'
 import CartDrawer from '../components/CartDrawer'
+import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <Navbar />
         <CartDrawer />
         {children}
+        <Footer />
         <ServiceWorkerRegister />
       </body>
     </html>

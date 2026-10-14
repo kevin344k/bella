@@ -28,13 +28,7 @@ const NAV_LINKS = [
     badgeColor: "bg-rose-600 text-white animate-pulse"
   },
   { name: "Categorías", href: "#categorias", icon: HomeIcon },
-  { 
-    name: "Catálogos", 
-    href: "#catalogos", 
-    icon: BookOpen,
-    badge: "C12 2026",
-    badgeColor: "bg-rose-100 text-rose-800"
-  },
+
 ]
 
 export default function Navbar() {
